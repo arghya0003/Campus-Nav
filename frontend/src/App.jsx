@@ -91,7 +91,8 @@ function PlaceAutocomplete({
   iconColor = "text-on-surface-variant",
   onIconClick,
   userLocation,
-  onUseCurrentLocation
+  onUseCurrentLocation,
+  onClear
 }) {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -252,7 +253,7 @@ function PlaceAutocomplete({
       )}
       <input
         ref={inputRef}
-        className="w-full pl-12 pr-4 py-3 bg-white/5 border-none rounded-2xl text-on-surface placeholder:text-on-surface-variant focus:ring-2 focus:ring-primary/40 font-body text-sm outline-none transition-all"
+        className="w-full pl-12 pr-10 py-3 bg-white/5 border-none rounded-2xl text-on-surface placeholder:text-on-surface-variant focus:ring-2 focus:ring-primary/40 font-body text-sm outline-none transition-all"
         type="text"
         placeholder={placeholder}
         value={value}
@@ -264,6 +265,23 @@ function PlaceAutocomplete({
         onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
         onKeyDown={handleKeyDown}
       />
+
+      {/* Clear button */}
+      {value && onClear && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onClear();
+            setShowSuggestions(false);
+          }}
+          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors z-10"
+          title="Clear"
+        >
+          <span className="material-symbols-outlined text-on-surface-variant hover:text-white text-lg">
+            close
+          </span>
+        </button>
+      )}
 
       {/* Suggestions dropdown */}
       {showSuggestions && hasAnySuggestions && (
@@ -1265,6 +1283,10 @@ function App() {
                   onIconClick={handleUseMyLocation}
                   userLocation={userLocation}
                   onUseCurrentLocation={handleUseMyLocation}
+                  onClear={() => {
+                    setOrigin("");
+                    setSelectedOriginCoords(null);
+                  }}
                 />
               </div>
 
@@ -1294,6 +1316,10 @@ function App() {
                   icon="flag"
                   userLocation={userLocation}
                   onUseCurrentLocation={handleUseMyLocationForDestination}
+                  onClear={() => {
+                    setDestination("");
+                    setSelectedDestCoords(null);
+                  }}
                 />
               </div>
 
