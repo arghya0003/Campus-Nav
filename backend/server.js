@@ -10,9 +10,25 @@ const PORT = process.env.PORT || 3001;
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 // Middleware
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+];
+
+// Allow a specific production origin set via env var, or all Vercel preview URLs
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN;
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'], // Allow Vite dev server
-  credentials: true
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. curl, Postman, server-to-server)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    if (ALLOWED_ORIGIN && origin === ALLOWED_ORIGIN) return callback(null, true);
+    // Allow any Vercel deployment (preview + production)
+    if (/\.vercel\.app$/.test(origin)) return callback(null, true);
+    callback(new Error(`CORS policy: origin ${origin} not allowed`));
+  },
+  credentials: true,
 }));
 app.use(express.json());
 
