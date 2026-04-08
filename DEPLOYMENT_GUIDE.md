@@ -44,7 +44,7 @@ git branch -M main
 In Render dashboard, go to your service → Environment:
 ```
 PORT=3001
-GOOGLE_MAPS_API_KEY=AIzaSyBkGFXg6IwBQ3s0a9FSnw5uYQgmSbZ8Mss
+GOOGLE_MAPS_API_KEY=api
 ALLOWED_ORIGIN=(leave blank - we'll fill after Vercel deployment)
 ```
 
